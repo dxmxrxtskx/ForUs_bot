@@ -146,38 +146,71 @@ def main() -> None:
     # Инициализируем базу данных
     try:
         database.init_database()
+        logger.info("База данных инициализирована")
     except Exception as e:
         logger.error(f"Ошибка инициализации БД: {e}")
+        import traceback
+        traceback.print_exc()
         return
     
     # Создаем приложение бота
     bot_token = os.getenv('BOT_TOKEN')
     if not bot_token:
         logger.error("BOT_TOKEN не найден в переменных окружения")
+        logger.error("Проверьте файл .env и переменную BOT_TOKEN")
         return
     
-    application = Application.builder().token(bot_token).build()
+    logger.info("BOT_TOKEN загружен успешно")
+    
+    try:
+        application = Application.builder().token(bot_token).build()
+        logger.info("Приложение бота создано")
+    except Exception as e:
+        logger.error(f"Ошибка создания приложения: {e}")
+        import traceback
+        traceback.print_exc()
+        return
     
     # Регистрируем обработчики главного меню (высокий приоритет)
-    application.add_handler(CommandHandler("start", start), group=0)
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, main_menu_handler), group=0)
-    application.add_handler(CallbackQueryHandler(main_menu_callback, pattern="^(main_menu|section_.+)$"), group=0)
+    try:
+        application.add_handler(CommandHandler("start", start), group=0)
+        application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, main_menu_handler), group=0)
+        application.add_handler(CallbackQueryHandler(main_menu_callback, pattern="^(main_menu|section_.+)$"), group=0)
+        logger.info("Обработчики главного меню зарегистрированы")
+    except Exception as e:
+        logger.error(f"Ошибка регистрации обработчиков главного меню: {e}")
+        import traceback
+        traceback.print_exc()
+        return
     
     # Импортируем и регистрируем обработчики разделов
-    from handlers import movies, activities, trips, tiktok, photos, games, sexual
-    
-    # Регистрируем обработчики разделов (низкий приоритет)
-    movies.register_handlers(application)
-    activities.register_handlers(application)
-    trips.register_handlers(application)
-    tiktok.register_handlers(application)
-    photos.register_handlers(application)
-    games.register_handlers(application)
-    sexual.register_handlers(application)
+    try:
+        from handlers import movies, activities, trips, tiktok, photos, games, sexual
+        logger.info("Обработчики разделов импортированы")
+        
+        movies.register_handlers(application)
+        activities.register_handlers(application)
+        trips.register_handlers(application)
+        tiktok.register_handlers(application)
+        photos.register_handlers(application)
+        games.register_handlers(application)
+        sexual.register_handlers(application)
+        logger.info("Обработчики разделов зарегистрированы")
+    except Exception as e:
+        logger.error(f"Ошибка регистрации обработчиков разделов: {e}")
+        import traceback
+        traceback.print_exc()
+        return
     
     # Запускаем бота
-    logger.info("Бот запущен")
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    try:
+        logger.info("Бот запущен, начинаем polling...")
+        application.run_polling(allowed_updates=Update.ALL_TYPES)
+    except Exception as e:
+        logger.error(f"Ошибка при запуске бота: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
 
 
 if __name__ == '__main__':
