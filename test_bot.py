@@ -6,7 +6,10 @@ import sys
 import database
 from database import (
     get_movie_categories, create_movie_category, create_movie, get_movies,
-    create_activity, get_activities, create_trip, get_trips,
+    create_activity, get_activities, 
+    get_trip_categories, create_trip_category, create_trip, get_trips,
+    create_tiktok_trend, get_tiktok_trends,
+    get_photo_categories, create_photo_category,
     create_game, get_games, create_sexual_item, get_sexual_items
 )
 
@@ -40,6 +43,39 @@ def test_database():
         activities = get_activities(status='planned')
         print(f"[OK] Планируемые активности: {len(activities)}")
         assert len(activities) > 0, "Должна быть хотя бы одна активность"
+        
+        # Тест поездок
+        trip_categories = get_trip_categories()
+        print(f"[OK] Категории поездок: {len(trip_categories)}")
+        assert len(trip_categories) >= 3, "Должно быть минимум 3 категории поездок"
+        
+        trip_category_id = trip_categories[0]['id']
+        trip_id = create_trip("Тестовая поездка", "Тестовое примечание", trip_category_id)
+        print(f"[OK] Поездка создана: ID={trip_id}")
+        
+        trips = get_trips()
+        print(f"[OK] Всего поездок: {len(trips)}")
+        assert len(trips) > 0, "Должна быть хотя бы одна поездка"
+        
+        # Тест трендов TikTok
+        tiktok_id = create_tiktok_trend("Тестовый тренд", None)
+        print(f"[OK] Тренд TikTok создан: ID={tiktok_id}")
+        
+        tiktok_trends = get_tiktok_trends(status='todo')
+        print(f"[OK] Тренды TikTok (todo): {len(tiktok_trends)}")
+        assert len(tiktok_trends) > 0, "Должен быть хотя бы один тренд"
+        
+        # Тест категорий фотографий
+        photo_categories = get_photo_categories()
+        print(f"[OK] Категории фотографий: {len(photo_categories)}")
+        assert len(photo_categories) >= 2, "Должно быть минимум 2 категории фотографий"
+        
+        photo_cat_id = create_photo_category("Тестовая категория фото", "http://test.com", "Тестовое описание")
+        print(f"[OK] Категория фотографий создана: ID={photo_cat_id}")
+        
+        all_photo_cats = get_photo_categories()
+        print(f"[OK] Всего категорий фотографий: {len(all_photo_cats)}")
+        assert len(all_photo_cats) > len(photo_categories), "Должна быть добавлена новая категория"
         
         # Тест создания игры
         game_id = create_game("Тестовая игра", "Тестовое примечание", "Тестовый жанр")

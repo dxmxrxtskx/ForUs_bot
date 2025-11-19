@@ -54,4 +54,5 @@ Thumbs.db
 
 # GitHub setup instructions (только для локального использования)
 GITHUB_SETUP.md
-
+SERVER_DEPLOY.md
+test_bot.py
