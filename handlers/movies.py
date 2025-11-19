@@ -216,7 +216,8 @@ async def movies_top_show(update: Update, context) -> None:
     else:
         text = f"{title}\n\n"
         for i, movie in enumerate(movies, 1):
-            if 'avg_rating' in movie.keys():
+            # Проверяем наличие ключа в Row объекте
+            if 'avg_rating' in dict(movie):
                 rating = movie['avg_rating']
             else:
                 rating = movie['rating']

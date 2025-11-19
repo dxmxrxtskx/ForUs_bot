@@ -221,7 +221,8 @@ async def games_top_show(update: Update, context) -> None:
     else:
         text = f"{title}\n\n"
         for i, game in enumerate(games, 1):
-            if 'avg_rating' in game.keys():
+            # Проверяем наличие ключа в Row объекте
+            if 'avg_rating' in dict(game):
                 rating = game['avg_rating']
             else:
                 rating = game['rating']

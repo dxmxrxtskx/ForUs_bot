@@ -117,8 +117,14 @@ def list_keyboard(
     # Создаем кнопки для элементов текущей страницы
     for item in page_items:
         # Предполагаем, что у элемента есть id и title
-        item_id = item['id'] if isinstance(item, dict) else item.id
-        item_title = item['title'] if isinstance(item, dict) else item.title
+        # sqlite3.Row поддерживает доступ как через [], так и через атрибуты
+        try:
+            item_id = item['id']
+            item_title = item['title']
+        except (TypeError, KeyError):
+            # Если это не словарь и не Row, пробуем через атрибуты
+            item_id = getattr(item, 'id', None)
+            item_title = getattr(item, 'title', 'Без названия')
         
         # Ограничиваем длину текста кнопки (Telegram лимит ~64 символа)
         button_text = item_title[:60] + "..." if len(item_title) > 60 else item_title
