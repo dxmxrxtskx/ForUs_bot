@@ -1,0 +1,20 @@
+# Автоматически определять конец строки
+* text=auto
+
+# Python файлы
+*.py text eol=lf
+
+# Конфигурационные файлы
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+
+# Shell скрипты
+*.sh text eol=lf
+
+# Dockerfile
+Dockerfile text eol=lf
+docker-compose.yml text eol=lf
+
